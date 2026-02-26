@@ -6,8 +6,8 @@ export interface Todo {
     id: string,
     title: string,
     description?: string,
-    dueDate?: Date,
+    dueDate?: string,
     priority: Priority,
     status: status,
-    createdAt: String,
+    createdAt: string,
 }

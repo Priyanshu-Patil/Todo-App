@@ -1,12 +1,12 @@
 import { z } from "zod"
 
-// Validation schema for form inputs
-export const todoScheme = z.object({
-    title: z.string().min(1, "Title is required"),
+export const todoSchema = z.object({
 
-    description: z.string().optional(),
+  title: z.string().min(1, "Title is required"),
 
-    dueDate: z.date().nullable(),
+  description: z.string().optional(),
 
-    priority: z.enum(["low", "medium", "high"])
+  dueDate: z.date().nullable().optional(),
+
+  priority: z.enum(["low", "medium", "high"])
 })

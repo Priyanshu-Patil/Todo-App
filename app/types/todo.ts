@@ -1,13 +1,13 @@
 export type Priority = "low" | "medium" | "high"
 
-export type status = "pending" | "completed"
+export type Status = "pending" | "completed"
 
 export interface Todo {
-    id: string,
-    title: string,
-    description?: string,
-    dueDate?: string,
-    priority: Priority,
-    status: status,
-    createdAt: string,
+  id: string
+  title: string
+  description?: string
+  dueDate?: string
+  priority: Priority
+  status: Status
+  createdAt: string
 }

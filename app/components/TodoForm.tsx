@@ -6,84 +6,84 @@ import { Dropdown } from "primereact/dropdown"
 import { Calendar } from "primereact/calendar"
 import { Button } from "primereact/button"
 
-import { todoScheme } from "../schemas/todoSchema"
+import { todoSchema } from "../schemas/todoSchema"
 import { useTodoStore } from "../store/todoStore"
-import type { Priority } from "../types/todo"
+import { Priority } from "../types/todo"
 
 export default function TodoForm() {
-    const addTodo = useTodoStore((state) => state.addTodo)
 
-    const [title, setTitle] = useState("")
-    const [description, setDescription] = useState("")
-    const [priority, setPriority] = useState<Priority>("low")
-    const [dueDate, setDueDate] = useState<Date | null>(null)
+  const addTodo = useTodoStore((s) => s.addTodo)
 
-    const handleSubmit = () => {
-        //Validate using zod
-        const result = todoScheme.safeParse({
-            title,
-            description,
-            dueDate,
-            priority
-        })
+  const [title, setTitle] = useState("")
+  const [description, setDescription] = useState("")
+  const [priority, setPriority] = useState<Priority>("low")
+  const [dueDate, setDueDate] = useState<Date | null>(null)
 
-        if (!result.success) {
-            alert(result.error.issues[0].message)
-            return
-        }
+  const handleSubmit = () => {
 
-        addTodo({
-            id: crypto.randomUUID(),
-            title,
-            description,
-            priority,
-            dueDate: dueDate?.toISOString(),
-            status: "pending",
-            createdAt: new Date().toISOString()
-          })
-      
-          // reset form
-          setTitle("")
-          setDescription("")
-          setDueDate(null)
+    const result = todoSchema.safeParse({
+      title,
+      description,
+      dueDate,
+      priority
+    })
+
+    if (!result.success) {
+      alert(result.error.issues[0].message)
+      return
     }
 
-    return (
-        <div className="p-4 flex flex-col gap-3">
-            <InputText
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="Todo title"
-            />
+    addTodo({
+      id: crypto.randomUUID(),
+      title,
+      description,
+      priority,
+      dueDate: dueDate?.toISOString(),
+      status: "pending",
+      createdAt: new Date().toISOString()
+    })
 
-            <InputText
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Description"
-            />
+    setTitle("")
+    setDescription("")
+    setDueDate(null)
+  }
 
-            {/* Due Date Picker */}
-            <Calendar
-                value={dueDate}
-                onChange={(e) => setDueDate(e.value as Date)}
-                placeholder="Select due date"
-            />
+  return (
+    <div className="p-4 rounded-xl bg-zinc-800 flex flex-col gap-3">
 
-            {/* Priority Selector */}
-            <Dropdown
-                value={priority}
-                options={[
-                    {label: "Low", value: "low"},
-                    {label: "Medium", value: "medium"},
-                    {label: "High", value: "high"}
-                ]}
-                onChange={(e) => setPriority(e.value as Priority)}
-            />
+      <InputText
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Todo title"
+      />
 
-            <Button
-                label="Add Todo"
-                onClick={handleSubmit}
-            />
-        </div>
-    )
+      <InputText
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        placeholder="Description"
+      />
+
+      <Calendar
+        value={dueDate}
+        onChange={(e) => setDueDate(e.value as Date)}
+        placeholder="Select due date"
+      />
+
+      <Dropdown
+        value={priority}
+        options={[
+          { label: "Low", value: "low" },
+          { label: "Medium", value: "medium" },
+          { label: "High", value: "high" }
+        ]}
+        onChange={(e) => setPriority(e.value)}
+      />
+
+      <Button
+        label="Add Todo"
+        onClick={handleSubmit}
+      />
+
+    </div>
+  )
 }
